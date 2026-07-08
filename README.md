@@ -1,281 +1,161 @@
-# Alzheimer’s Disease MRI Classification with CAM-Based Explainable AI
+# Alzheimer's Disease MRI Classification with CAM-Based Explainable AI
 
-This repository contains training and visualization scripts for Alzheimer’s disease stage classification from 2D MRI images using **ResNet-18** and three explainable AI attention methods: **GradCAM**, **ScoreCAM**, and **LayerCAM**.
+This repository contains training, visualization, and project-explainer code for
+Alzheimer's disease stage classification from 2D MRI images using ResNet-18 and
+CAM-based explainable AI methods.
 
-The project focuses on two goals:
-1. **Classify MRI images into 4 dementia stages**
-2. **Improve interpretability** by showing which image regions influenced the prediction
+The work focuses on two goals:
 
-The uploaded code implements a baseline model and three CAM-based dual-branch models, along with separate scripts to generate attention heatmaps from trained checkpoints.
+1. Classify MRI images into four dementia-stage categories.
+2. Improve interpretability by showing which image regions influenced the model.
 
----
+## Interactive Project Page
+
+The repository includes a Streamlit page that explains the project idea,
+pipeline, visual attention examples, and the remaining gaps before a full live
+inference demo.
+
+Run it locally:
+
+```bash
+pip install -r requirements.txt
+python -m streamlit run app.py
+```
+
+The app is an educational research demo only. It does not provide medical
+diagnosis and should not be used for clinical decisions.
 
 ## Project Overview
 
-The models classify MRI images into the following four classes:
-- `NonDemented`
-- `VeryMildDemented`
-- `MildDemented`
-- `ModerateDemented`
+The models classify MRI images into four classes:
 
-All training scripts use:
-- **ResNet-18** backbone
-- **Input size:** `224 x 224`
-- **Epochs:** `80`
-- **Batch size:** `16`
-- **Optimizer:** `Adam`
-- **Learning rate:** `0.001`
-- **Scheduler:** `StepLR(step_size=20, gamma=0.1)`
-- **Train/Validation split:** `80/20`
+- NonDemented
+- VeryMildDemented
+- MildDemented
+- ModerateDemented
 
-The code is written in PyTorch and automatically uses CUDA if available.
+The training scripts use:
 
----
+- ResNet-18 backbone
+- Input size: 224 x 224
+- Epochs: 80
+- Batch size: 16
+- Optimizer: Adam
+- Learning rate: 0.001
+- Train/validation split: 80/20
 
 ## Included Files
 
+### Streamlit app
+
+- `app.py` - project overview, pipeline explanation, visual explorer, learning notes, and next-step gaps
+- `assets/presentation/` - selected images extracted from the project presentation for the app
+
 ### Training scripts
-- `1_train_baseline_model.py`  
-  Trains the baseline ResNet-18 classifier.
 
-- `2_train_gradcam_model.py`  
-  Trains a dual-branch ResNet-18 model using GradCAM-based relevance features.
-
-- `3_train_scorecam_model.py`  
-  Trains a dual-branch ResNet-18 model using ScoreCAM-based relevance features. This is marked in the code as the **best-performing model**.
-
-- `4_train_layercam_model.py`  
-  Trains a dual-branch ResNet-18 model using LayerCAM-based relevance features. This is marked in the code as the **fastest variant**.
+- `1_train_baseline_model.py` - baseline ResNet-18 classifier
+- `2_train_gradcam_model.py` - Grad-CAM enhanced dual-branch model
+- `3_train_scorecam_model.py` - ScoreCAM enhanced dual-branch model
+- `4_train_layercam_model.py` - LayerCAM enhanced dual-branch model
 
 ### Heatmap generation scripts
-- `generate_heatmaps_gradcam.py`  
-  Loads a trained GradCAM model and generates visualization heatmaps.
 
-- `generate_heatmaps_scorecam.py`  
-  Loads a trained ScoreCAM model and generates visualization heatmaps.
+- `generate_heatmaps_gradcam.py`
+- `generate_heatmaps_scorecam.py`
+- `generate_heatmaps_layercam.py`
 
-- `generate_heatmaps_layercam.py`  
-  Loads a trained LayerCAM model and generates visualization heatmaps.
+### Documentation
 
-### Supporting files
-- `NN_FinalReport.pdf`  
-  Final report for the project.
-
-- `NN PPT_Final.pptx`  
-  Presentation slides.
-
----
+- `NN_FinalReport.pdf` - final project report
+- `README_HEATMAPS.txt` - heatmap-generation notes
+- `requirements.txt` - Streamlit app dependencies
 
 ## Model Variants
 
-### 1. Baseline ResNet-18
-This is the reference model. It uses a pretrained ResNet-18 and replaces the final fully connected layer for 4-class classification.
+### Baseline ResNet-18
 
-### 2. Dual-Branch GradCAM Model
-This version adds a second branch intended to capture GradCAM-based relevance information. Features from two branches are fused before final classification.
+Reference classifier using a pretrained ResNet-18 with a final layer adapted for
+four dementia-stage classes.
 
-### 3. Dual-Branch ScoreCAM Model
-This version uses ScoreCAM-style attention and a stronger fusion strategy. According to the code comments and summaries, this is the strongest model in the project.
+### Grad-CAM Enhanced Model
 
-### 4. Dual-Branch LayerCAM Model
-This version uses LayerCAM and is designed to keep good interpretability with lower overhead. According to the code comments and summaries, this is the fastest model among the enhanced variants.
+Adds visual explanation based on class-discriminative gradients from the final
+convolutional layer.
 
----
+### ScoreCAM Enhanced Model
+
+Uses perturbation-based class activation scoring. The project materials present
+this as the strongest visual explanation direction.
+
+### LayerCAM Enhanced Model
+
+Uses layer-wise activation explanations, intended as a lower-overhead
+interpretability variant.
 
 ## Expected Dataset Structure
 
-The code expects the dataset folder to be arranged class-wise like this:
+The training scripts expect a class-wise dataset:
 
 ```text
 AugmentedAlzheimerDataset/
 ├── NonDemented/
-│   ├── img1.jpg
-│   ├── img2.jpg
-│   └── ...
 ├── VeryMildDemented/
-│   ├── img1.jpg
-│   ├── img2.jpg
-│   └── ...
 ├── MildDemented/
-│   ├── img1.jpg
-│   ├── img2.jpg
-│   └── ...
 └── ModerateDemented/
-    ├── img1.jpg
-    ├── img2.jpg
-    └── ...
 ```
 
-The scripts read files with these extensions:
+Supported image extensions:
+
 - `.jpg`
 - `.png`
 - `.jpeg`
 
----
-
 ## Important Setup Note
 
-The uploaded scripts currently use **hardcoded Windows paths** inside the `CONFIG` dictionary, for example:
+The current training and heatmap scripts still contain hardcoded Windows paths
+inside their `CONFIG` dictionaries, for example:
 
 ```python
-'dataset_path': r'D:\cop\AugmentedAlzheimerDataset'
-'output_path': r'D:\cop\AugmentedAlzheimerDataset\roi_scorecam_output\evaluation_results'
+"dataset_path": r"D:\cop\AugmentedAlzheimerDataset"
+"output_path": r"D:\cop\AugmentedAlzheimerDataset\roi_scorecam_output\evaluation_results"
 ```
 
-Before running the code on your machine, update these paths to match your local dataset and output folders.
+Before running training or heatmap generation, update those paths or refactor
+them into command-line arguments/config files.
 
----
+## Training Commands
 
-## Installation
-
-Create a Python environment and install the required packages.
-
-```bash
-pip install torch torchvision numpy matplotlib tqdm pillow opencv-python scipy
-```
-
-If you are using a GPU, make sure your PyTorch installation matches your CUDA version.
-
----
-
-## How to Run
-
-### 1. Train the baseline model
 ```bash
 python 1_train_baseline_model.py
-```
-
-### 2. Train the GradCAM model
-```bash
 python 2_train_gradcam_model.py
-```
-
-### 3. Train the ScoreCAM model
-```bash
 python 3_train_scorecam_model.py
-```
-
-### 4. Train the LayerCAM model
-```bash
 python 4_train_layercam_model.py
 ```
 
-### 5. Generate GradCAM heatmaps
+## Heatmap Commands
+
 ```bash
 python generate_heatmaps_gradcam.py
-```
-
-### 6. Generate ScoreCAM heatmaps
-```bash
 python generate_heatmaps_scorecam.py
-```
-
-### 7. Generate LayerCAM heatmaps
-```bash
 python generate_heatmaps_layercam.py
 ```
 
----
+## Current Gaps
 
-## Outputs
+To make this a full live model demo, the repo still needs:
 
-Each training script saves results into the configured output directory.
+- trained checkpoint files or documented download links
+- safe sample MRI images for demo inference
+- confusion matrices and per-class metrics
+- configurable dataset/model/output paths
+- stronger reproducibility controls
+- explicit medical/research-only safety framing
 
-### Training outputs
-Typical saved files include:
-- `*_best_model.pth` — best checkpoint based on validation accuracy
-- `*_training_history.json` — training and validation metrics across epochs
-- `*_training_curves.png` — loss and accuracy plots
+## Suggested Next Improvements
 
-Examples:
-- `baseline_best_model.pth`
-- `gradcam_best_model.pth`
-- `scorecam_best_model.pth`
-- `layercam_best_model.pth`
-
-### Heatmap outputs
-Each heatmap script saves visualizations for sample images. The figure usually contains:
-- original MRI image
-- CAM heatmap
-- overlay image
-
-The scripts generate heatmaps for up to **3 images per class**.
-
----
-
-## Preprocessing Used in Code
-
-The training scripts apply the following transforms:
-- resize to `224 x 224`
-- random horizontal flip
-- random rotation
-- color jitter
-- tensor conversion
-- ImageNet normalization
-
-Validation uses resize and normalization only.
-
----
-
-## Notes on the Pipeline
-
-- All models use a shared ResNet-18 backbone.
-- The enhanced models use **dual-branch feature fusion**.
-- Heatmap scripts load saved checkpoints and generate visual explanations of model attention.
-- The code is built for **2D MRI slice classification**, not full 3D MRI volumes.
-- The presentation and report describe a broader relevance-attention research direction, but the uploaded code files here mainly cover the **baseline**, **CAM-based dual-branch training**, and **heatmap generation** stages.
-
----
-
-## Performance Summary
-
-Based on the comments and summaries included in the uploaded scripts:
-
-- **ScoreCAM** is presented as the **best-performing model**
-- **LayerCAM** is presented as the **fastest model**
-- The project aims to balance **accuracy**, **interpretability**, and **computational efficiency**
-
-If you want exact final numbers for a run, check:
-- the terminal logs after training
-- the saved `*_training_history.json`
-- the generated training curve plots
-
----
-
-## Suggested Repository Structure
-
-If you want to keep the repo clean, a good structure would be:
-
-```text
-project-root/
-├── 1_train_baseline_model.py
-├── 2_train_gradcam_model.py
-├── 3_train_scorecam_model.py
-├── 4_train_layercam_model.py
-├── generate_heatmaps_gradcam.py
-├── generate_heatmaps_scorecam.py
-├── generate_heatmaps_layercam.py
-├── NN_FinalReport.pdf
-├── NN PPT_Final.pptx
-├── README.md
-└── outputs/
-```
-
----
-
-## Possible Improvements
-
-A few practical improvements for future cleanup:
-- move all hardcoded paths into command-line arguments or a config file
-- add a `requirements.txt`
-- add checkpoint loading for resuming training
-- sort or shuffle filenames before the 80/20 split for better reproducibility
-- save confusion matrices and per-class metrics
-- add support for Linux-friendly relative paths
-
----
-
-## Acknowledgment
-
-This project is inspired by relevance-augmented attention ideas for Alzheimer’s disease detection, but the implementation here uses a lighter **2D ResNet-18 + CAM-based explainability** pipeline for practical training and visualization.
-
+- Add `config.yaml` or CLI arguments for all paths.
+- Save `results_summary.json` with final metrics.
+- Add confusion matrix and classification report outputs.
+- Add a small permitted sample-assets folder.
+- Add checkpoint loading for a real inference demo.
+- Refactor shared dataset/model utilities into reusable modules.
