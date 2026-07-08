@@ -67,6 +67,7 @@ The training scripts use:
 ### Documentation
 
 - `NN_FinalReport.pdf` - final project report
+- `NN_FinalPresentation.pptx` - final project presentation
 - `README_HEATMAPS.txt` - heatmap-generation notes
 - `requirements.txt` - Streamlit app dependencies
 

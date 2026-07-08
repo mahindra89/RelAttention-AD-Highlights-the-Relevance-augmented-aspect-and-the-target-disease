@@ -6,6 +6,8 @@ import streamlit as st
 
 ROOT = Path(__file__).parent
 ASSET_DIR = ROOT / "assets" / "presentation"
+REPORT_PATH = ROOT / "NN_FinalReport.pdf"
+PRESENTATION_PATH = ROOT / "NN_FinalPresentation.pptx"
 
 CLASS_IMAGES = {
     "Mild Dementia": ASSET_DIR / "slide_04_image_01.jpg",
@@ -65,8 +67,28 @@ st.warning(
     "and should not be used for clinical decisions."
 )
 
-overview_tab, pipeline_tab, explorer_tab, learning_tab, gaps_tab = st.tabs(
-    ["Overview", "Pipeline", "Visual Explorer", "Learning", "Next Steps"]
+download_left, download_right = st.columns(2)
+with download_left:
+    if REPORT_PATH.exists():
+        st.download_button(
+            "Download report",
+            data=REPORT_PATH.read_bytes(),
+            file_name="NN_FinalReport.pdf",
+            mime="application/pdf",
+            use_container_width=True,
+        )
+with download_right:
+    if PRESENTATION_PATH.exists():
+        st.download_button(
+            "Download presentation",
+            data=PRESENTATION_PATH.read_bytes(),
+            file_name="NN_FinalPresentation.pptx",
+            mime="application/vnd.openxmlformats-officedocument.presentationml.presentation",
+            use_container_width=True,
+        )
+
+overview_tab, pipeline_tab, explorer_tab, learning_tab = st.tabs(
+    ["Overview", "Pipeline", "Visual Explorer", "Learning"]
 )
 
 with overview_tab:
@@ -209,44 +231,3 @@ regions rather than image artifacts or background.
 - Creates a visual story that hiring managers can understand quickly
 """
         )
-
-with gaps_tab:
-    st.subheader("Next Steps Before a Full Live Demo")
-    st.markdown(
-        """
-The current repository is strongest as an explanatory project page. To turn it
-into a live inference demo, the project needs a few missing assets and cleanup
-items.
-"""
-    )
-
-    gaps = pd.DataFrame(
-        [
-            {
-                "Gap": "Model checkpoint",
-                "Why it matters": "A trained `.pth` file is required for real predictions.",
-                "Fix": "Add a small demo checkpoint or document where to download it.",
-            },
-            {
-                "Gap": "Sample test set",
-                "Why it matters": "The app needs safe example MRI images to run without private data.",
-                "Fix": "Add a small permitted sample set or precomputed demo outputs.",
-            },
-            {
-                "Gap": "Configurable paths",
-                "Why it matters": "Hardcoded `D:\\cop\\...` paths block reproducibility.",
-                "Fix": "Move dataset/model/output paths into CLI args or config.",
-            },
-            {
-                "Gap": "Evaluation artifacts",
-                "Why it matters": "Reviewers need confusion matrices and per-class metrics.",
-                "Fix": "Save metric JSON, confusion matrix, and sample heatmaps.",
-            },
-            {
-                "Gap": "Medical validation",
-                "Why it matters": "Interpretability is not the same as clinical usefulness.",
-                "Fix": "Frame as research/education and avoid diagnostic claims.",
-            },
-        ]
-    )
-    st.dataframe(gaps, hide_index=True, use_container_width=True)
