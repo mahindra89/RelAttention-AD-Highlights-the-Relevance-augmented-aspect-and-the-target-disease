@@ -161,16 +161,29 @@ maps for Grad-CAM, ScoreCAM, and LayerCAM. This helps a reviewer inspect whether
 the model appears to focus on relevant MRI regions instead of unrelated image
 artifacts.
 
-The repository does not currently include final metric artifacts such as
-confusion matrices or per-class reports, so the Streamlit page avoids claiming
-exact accuracy numbers. Adding those artifacts would make the evaluation story
-stronger and easier to verify.
+The final report includes the following performance highlights:
+
+| Metric | Reported value | Context |
+| --- | --- | --- |
+| Baseline final accuracy | 97.12% | ResNet-18 baseline accuracy curve |
+| Grad-CAM improvement | +0.63 percentage points | Accuracy improvement over baseline |
+| LayerCAM improvement | +0.76 percentage points | Accuracy improvement over baseline |
+| ScoreCAM final accuracy | 98.15% in the accuracy section; 98.25% in the conclusion | Best-performing CAM variant |
+| ScoreCAM macro-F1 | 0.9820 | Balanced class-wise performance |
+| ScoreCAM precision / recall | 98.55% / 98.38% | Conclusion summary |
+| ScoreCAM error rate | 1.72% | Conclusion summary |
+| ScoreCAM overhead | 4.0% | Conclusion summary |
+
+The report also discusses confusion matrices for the ResNet-18 baseline and the
+Grad-CAM, LayerCAM, and ScoreCAM variants. The repository does not currently
+include those confusion-matrix images or raw metric files as standalone assets,
+so adding them would make the evaluation story easier to reproduce and verify.
 
 ## Recommended Validation Artifacts
 
-- `results_summary.json` with final metrics for each model
-- confusion matrices for baseline, Grad-CAM, ScoreCAM, and LayerCAM variants
-- per-class precision, recall, and F1 scores
+- `results_summary.json` with the report-backed final metrics for each model
+- confusion-matrix images for baseline, Grad-CAM, ScoreCAM, and LayerCAM variants
+- per-class precision, recall, and F1 score tables
 - training-curve images committed to an `assets/results/` folder
 - representative heatmap outputs for each dementia-stage class
 

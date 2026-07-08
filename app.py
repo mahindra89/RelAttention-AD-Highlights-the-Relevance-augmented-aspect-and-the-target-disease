@@ -117,6 +117,51 @@ VALIDATION_ARTIFACTS = pd.DataFrame(
     ]
 )
 
+REPORT_METRICS = pd.DataFrame(
+    [
+        {
+            "Metric from report": "Baseline final accuracy",
+            "Reported value": "97.12%",
+            "Context": "ResNet-18 baseline accuracy curve",
+        },
+        {
+            "Metric from report": "Grad-CAM improvement",
+            "Reported value": "+0.63 percentage points",
+            "Context": "Accuracy improvement over baseline",
+        },
+        {
+            "Metric from report": "LayerCAM improvement",
+            "Reported value": "+0.76 percentage points",
+            "Context": "Accuracy improvement over baseline",
+        },
+        {
+            "Metric from report": "ScoreCAM final accuracy",
+            "Reported value": "98.15% in accuracy section; 98.25% in conclusion",
+            "Context": "Best-performing CAM variant",
+        },
+        {
+            "Metric from report": "ScoreCAM macro-F1",
+            "Reported value": "0.9820",
+            "Context": "Balanced class-wise performance",
+        },
+        {
+            "Metric from report": "ScoreCAM precision / recall",
+            "Reported value": "98.55% / 98.38%",
+            "Context": "Conclusion summary",
+        },
+        {
+            "Metric from report": "ScoreCAM error rate",
+            "Reported value": "1.72%",
+            "Context": "Conclusion summary",
+        },
+        {
+            "Metric from report": "ScoreCAM overhead",
+            "Reported value": "4.0%",
+            "Context": "Conclusion summary",
+        },
+    ]
+)
+
 
 st.set_page_config(page_title="Alzheimer MRI Explainability", layout="wide")
 
@@ -266,11 +311,20 @@ across a baseline ResNet-18 model and three CAM-enhanced variants. The visual
 explorer then adds qualitative evidence by showing which MRI regions the
 explanation methods emphasize.
 
-No final metric files or confusion-matrix images are currently included in the
-repository, so the public page avoids claiming exact accuracy numbers. Instead,
-it presents the evaluation structure and the evidence the project is prepared to
-produce when the training runs and saved artifacts are available.
+The final report includes metric summaries for the baseline and CAM-enhanced
+models. The repository does not currently include the raw metric files or
+confusion-matrix images as standalone assets, so this page separates
+report-backed results from artifacts that should still be added for direct
+reproducibility.
 """
+    )
+
+    st.subheader("Report-Backed Metrics")
+    st.dataframe(REPORT_METRICS, hide_index=True, use_container_width=True)
+    st.caption(
+        "Note: the report describes ScoreCAM as 98.15% in the accuracy/key-metrics "
+        "discussion and 98.25% in the conclusion. Both values are shown rather than "
+        "silently choosing one."
     )
 
     st.dataframe(EVALUATION_TABLE, hide_index=True, use_container_width=True)
@@ -286,6 +340,7 @@ produce when the training runs and saved artifacts are available.
 
 - Clear baseline-to-enhanced model comparison
 - Consistent ResNet-18 backbone across variants
+- Reported accuracy, macro-F1, precision, recall, and error-rate metrics
 - CAM-based heatmap generation scripts
 - Visual examples for multiple dementia-stage classes
 """
@@ -295,9 +350,9 @@ produce when the training runs and saved artifacts are available.
             """
 #### What would make it stronger
 
-- Add confusion matrices for each model
-- Add per-class precision, recall, and F1
-- Add a small `results_summary.json`
+- Add the report's confusion-matrix images as standalone assets
+- Add per-class precision, recall, and F1 tables
+- Add a small machine-readable `results_summary.json`
 - Add training-curve images to the Streamlit page
 """
         )
