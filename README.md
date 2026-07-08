@@ -12,8 +12,8 @@ The work focuses on two goals:
 ## Interactive Project Page
 
 The repository includes a Streamlit page that explains the project idea,
-pipeline, visual attention examples, and the remaining gaps before a full live
-inference demo.
+pipeline, visual attention examples, evaluation approach, and key learning
+outcomes.
 
 Run it locally:
 
@@ -48,7 +48,7 @@ The training scripts use:
 
 ### Streamlit app
 
-- `app.py` - project overview, pipeline explanation, visual explorer, learning notes, and next-step gaps
+- `app.py` - project overview, pipeline explanation, visual explorer, evaluation notes, and learning summary
 - `assets/presentation/` - selected images extracted from the project presentation for the app
 
 ### Training scripts
@@ -99,10 +99,10 @@ The training scripts expect a class-wise dataset:
 
 ```text
 AugmentedAlzheimerDataset/
-├── NonDemented/
-├── VeryMildDemented/
-├── MildDemented/
-└── ModerateDemented/
+|-- NonDemented/
+|-- VeryMildDemented/
+|-- MildDemented/
+`-- ModerateDemented/
 ```
 
 Supported image extensions:
@@ -141,16 +141,38 @@ python generate_heatmaps_scorecam.py
 python generate_heatmaps_layercam.py
 ```
 
-## Current Gaps
+## Evaluation Approach
 
-To make this a full live model demo, the repo still needs:
+The project is structured to evaluate both classification performance and
+interpretability.
 
-- trained checkpoint files or documented download links
-- safe sample MRI images for demo inference
-- confusion matrices and per-class metrics
-- configurable dataset/model/output paths
-- stronger reproducibility controls
-- explicit medical/research-only safety framing
+The training scripts track:
+
+- training loss
+- validation loss
+- validation accuracy
+- best validation accuracy
+- training history JSON files
+- training-curve images
+- best model checkpoints
+
+The heatmap scripts support qualitative review by generating class activation
+maps for Grad-CAM, ScoreCAM, and LayerCAM. This helps a reviewer inspect whether
+the model appears to focus on relevant MRI regions instead of unrelated image
+artifacts.
+
+The repository does not currently include final metric artifacts such as
+confusion matrices or per-class reports, so the Streamlit page avoids claiming
+exact accuracy numbers. Adding those artifacts would make the evaluation story
+stronger and easier to verify.
+
+## Recommended Validation Artifacts
+
+- `results_summary.json` with final metrics for each model
+- confusion matrices for baseline, Grad-CAM, ScoreCAM, and LayerCAM variants
+- per-class precision, recall, and F1 scores
+- training-curve images committed to an `assets/results/` folder
+- representative heatmap outputs for each dementia-stage class
 
 ## Suggested Next Improvements
 

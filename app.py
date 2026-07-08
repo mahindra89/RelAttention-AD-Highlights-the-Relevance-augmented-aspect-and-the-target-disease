@@ -53,6 +53,70 @@ MODEL_TABLE = pd.DataFrame(
     ]
 )
 
+EVALUATION_TABLE = pd.DataFrame(
+    [
+        {
+            "Evidence area": "Classification quality",
+            "What the code tracks": "Training loss, validation loss, and validation accuracy",
+            "Current repo evidence": "Training scripts save history JSON and best checkpoints when run",
+            "Why it matters": "Shows whether the model learns beyond a visual demo",
+        },
+        {
+            "Evidence area": "Model comparison",
+            "What the code tracks": "Baseline, Grad-CAM, ScoreCAM, and LayerCAM variants",
+            "Current repo evidence": "Separate scripts use the same dataset split and backbone family",
+            "Why it matters": "Makes the project a controlled experiment rather than one model run",
+        },
+        {
+            "Evidence area": "Explainability",
+            "What the code tracks": "CAM heatmaps for sample images by class",
+            "Current repo evidence": "Presentation examples and heatmap-generation scripts",
+            "Why it matters": "Helps reviewers inspect whether predictions rely on relevant regions",
+        },
+        {
+            "Evidence area": "Clinical responsibility",
+            "What the code tracks": "Research-only framing and visual review",
+            "Current repo evidence": "Public app disclaimer and interpretability notes",
+            "Why it matters": "Avoids overstating a medical-imaging prototype",
+        },
+    ]
+)
+
+VALIDATION_ARTIFACTS = pd.DataFrame(
+    [
+        {
+            "Artifact": "Training history JSON",
+            "Produced by": "Each training script",
+            "Status": "Supported by code",
+            "Use": "Plot accuracy/loss and compare training stability",
+        },
+        {
+            "Artifact": "Best model checkpoint",
+            "Produced by": "Each training script",
+            "Status": "Expected after training",
+            "Use": "Reload the strongest model for heatmap generation",
+        },
+        {
+            "Artifact": "Training curves",
+            "Produced by": "Training scripts",
+            "Status": "Supported by code",
+            "Use": "Show convergence and overfitting behavior",
+        },
+        {
+            "Artifact": "Confusion matrix",
+            "Produced by": "Not yet included",
+            "Status": "Recommended next metric",
+            "Use": "Reveal which dementia-stage classes are confused",
+        },
+        {
+            "Artifact": "Per-class precision/recall/F1",
+            "Produced by": "Not yet included",
+            "Status": "Recommended next metric",
+            "Use": "Evaluate class imbalance and minority-class behavior",
+        },
+    ]
+)
+
 
 st.set_page_config(page_title="Alzheimer MRI Explainability", layout="wide")
 
@@ -87,8 +151,8 @@ with download_right:
             use_container_width=True,
         )
 
-overview_tab, pipeline_tab, explorer_tab, learning_tab = st.tabs(
-    ["Overview", "Pipeline", "Visual Explorer", "Learning"]
+overview_tab, pipeline_tab, explorer_tab, evaluation_tab, learning_tab = st.tabs(
+    ["Overview", "Pipeline", "Visual Explorer", "Evaluation", "Learning"]
 )
 
 with overview_tab:
@@ -190,6 +254,52 @@ given MRI example.
         st.info(
             "This page uses presentation assets and project summaries. Live model "
             "inference requires trained checkpoints, which are not currently included."
+        )
+
+with evaluation_tab:
+    st.subheader("Evaluation Story")
+    st.markdown(
+        """
+This project is evaluated from two angles: predictive performance and
+explainability. The training scripts are designed to compare validation accuracy
+across a baseline ResNet-18 model and three CAM-enhanced variants. The visual
+explorer then adds qualitative evidence by showing which MRI regions the
+explanation methods emphasize.
+
+No final metric files or confusion-matrix images are currently included in the
+repository, so the public page avoids claiming exact accuracy numbers. Instead,
+it presents the evaluation structure and the evidence the project is prepared to
+produce when the training runs and saved artifacts are available.
+"""
+    )
+
+    st.dataframe(EVALUATION_TABLE, hide_index=True, use_container_width=True)
+
+    st.subheader("Validation Artifacts")
+    st.dataframe(VALIDATION_ARTIFACTS, hide_index=True, use_container_width=True)
+
+    left, right = st.columns(2)
+    with left:
+        st.markdown(
+            """
+#### What is already strong
+
+- Clear baseline-to-enhanced model comparison
+- Consistent ResNet-18 backbone across variants
+- CAM-based heatmap generation scripts
+- Visual examples for multiple dementia-stage classes
+"""
+        )
+    with right:
+        st.markdown(
+            """
+#### What would make it stronger
+
+- Add confusion matrices for each model
+- Add per-class precision, recall, and F1
+- Add a small `results_summary.json`
+- Add training-curve images to the Streamlit page
+"""
         )
 
 with learning_tab:
