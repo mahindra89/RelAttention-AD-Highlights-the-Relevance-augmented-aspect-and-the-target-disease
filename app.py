@@ -204,13 +204,17 @@ CAM methods provide a bridge between model output and visual explanation by
 projecting class-relevant activations back onto the image. This allows a
 reviewer to inspect whether the model appears to focus on meaningful anatomical
 regions rather than image artifacts or background.
+
+Overall, the project demonstrates applied computer vision in a high-impact
+domain while treating medical-imaging constraints responsibly. It presents the
+model as more than an accuracy score: the visual explanations create a clear
+story about how performance, interpretability, and practical review can work
+together in an AI-assisted imaging workflow.
 """
     )
 
-    left, right = st.columns(2)
-    with left:
-        st.markdown(
-            """
+    st.markdown(
+        """
 #### Technical Concepts
 
 - Transfer learning with ResNet-18
@@ -219,15 +223,4 @@ regions rather than image artifacts or background.
 - Attention-style feature visualization
 - Model comparison through accuracy and interpretability
 """
-        )
-    with right:
-        st.markdown(
-            """
-#### Portfolio Value
-
-- Shows applied computer vision
-- Connects ML performance with explainability
-- Uses medical-imaging constraints responsibly
-- Creates a visual story that hiring managers can understand quickly
-"""
-        )
+    )
