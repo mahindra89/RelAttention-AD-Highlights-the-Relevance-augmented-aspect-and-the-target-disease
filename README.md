@@ -15,6 +15,8 @@ The repository includes a Streamlit page that explains the project idea,
 pipeline, visual attention examples, evaluation approach, and key learning
 outcomes.
 
+[Open the live Streamlit app](https://relevance-augmented-alzheimer-detection.streamlit.app/)
+
 Run it locally:
 
 ```bash
